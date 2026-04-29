@@ -1,7 +1,11 @@
-import { generatePasswordHash, hashPassword } from "../utility/crypt.js";
-import sql from "./db.js";
+import { generatePasswordHash, hashPassword } from "../utility/crypt.ts";
+import sql from "./db.ts";
 
-export async function registerUser(name, email, password) {
+export async function registerUser(
+  name: string,
+  email: string,
+  password: string,
+) {
   const passwordHash = await hashPassword(password);
 
   const newUser = await sql`
@@ -12,7 +16,7 @@ export async function registerUser(name, email, password) {
 
   return newUser[0];
 }
-export async function getUser(email) {
+export async function getUser(email: string) {
   return await sql`
     SELECT *
     FROM users
@@ -20,7 +24,7 @@ export async function getUser(email) {
   `;
 }
 
-export async function resetPassword(email, plainText) {
+export async function resetPassword(email: string, plainText: string) {
   const temPwd = await generatePasswordHash(plainText);
   await sql`
   UPDATE users SET password_hash = ${temPwd.hashPwd}

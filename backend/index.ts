@@ -1,19 +1,15 @@
-import express from "express";
-import { getUser, registerUser, resetPassword } from "./models/users.js";
-import authenticationMiddleware from "./middleware/authentication.js";
+import express, { NextFunction, Request, Response } from "express";
+import { getUser, registerUser, resetPassword } from "./models/users.ts";
+import authenticationMiddleware from "./middleware/authentication.ts";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
 const app = express();
 const port = process.env.PORT || 3000;
-import router from "./routes/api.js";
-import authorizationMiddleware from "./middleware/authorization.js";
+import router from "./routes/api.ts";
+import authorizationMiddleware from "./middleware/authorization.ts";
 import { fileURLToPath } from "url";
-import {
-  addCurrentReferenceNumber,
-  editReference,
-  getCurrentReferenceNumber,
-} from "./models/applications.js";
+
 app.use(cors({ credentials: true, origin: true }));
 app.use(cookieParser());
 app.use(express.json());
@@ -46,7 +42,7 @@ app.post("/registration", async (req, res) => {
   }
 });
 
-app.post("/login", authenticationMiddleware, (req, res) => {
+app.post("/login", authenticationMiddleware, (req: any, res) => {
   return res
     .cookie("access_token", req.access_token, {
       httpOnly: true,
@@ -89,39 +85,6 @@ app.post("/forget_password", async (req, res) => {
   } catch (error) {
     console.log("err", error);
     return res.status(400).json({ error: error });
-  }
-});
-
-app.post("/reference_number", async (req, res) => {
-  try {
-    const { current_reference_number } = req.body;
-    await addCurrentReferenceNumber(current_reference_number);
-    return res.status(200).json({ message: "Added successfully" });
-  } catch (error) {
-    return res.status(400).json({ error: error });
-  }
-});
-
-app.put("/reference_number/:id", async (req, res) => {
-  try {
-    const id = req.params.id;
-    const current_reference_number = req.body.current_reference_number;
-    await editReference(id, current_reference_number);
-    return res.status(200).json({ message: "Updated successfully" });
-  } catch (error) {
-    return res.status(400).json({ error: error.message || error });
-  }
-});
-
-app.get("/reference_number", async (req, res) => {
-  try {
-    const _current_reference = await getCurrentReferenceNumber();
-
-    return res.status(200).json({
-      current_reference_number: _current_reference ?? 0, // default to 0 if null
-    });
-  } catch (error) {
-    return res.status(400).json({ error: error.message });
   }
 });
 

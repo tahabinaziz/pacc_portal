@@ -6,7 +6,7 @@ import {
   getApplications,
   registerApplication,
   updateApplication,
-} from "../models/applications.js";
+} from "../models/applications.ts";
 const router = express.Router();
 
 router.post("/applications", async (req, res) => {
@@ -59,7 +59,7 @@ router.post("/applications", async (req, res) => {
       passport_collected_date,
       visa_type,
       language,
-      abh_document_submitted_date
+      abh_document_submitted_date,
     );
     return res.json({ message: "New application created successfully!" });
   } catch (error) {
@@ -72,7 +72,7 @@ router.put("/applications/:id", async (req, res) => {
     const { id } = req.params;
     const data = req.body;
 
-    const updatedApplication = await updateApplication(id, data);
+    const updatedApplication = await updateApplication(Number(id), data);
 
     if (updatedApplication.count === 0) {
       return res.status(404).json({ error: "Application not found" });
@@ -97,10 +97,10 @@ router.get("/applications", async (req, res) => {
 router.get("/applications/user/:user_id", async (req, res) => {
   try {
     const { user_id } = req.params;
-    const application = await getApplicationByUser(user_id);
+    const application = await getApplicationByUser(Number(user_id));
     // Always send JSON, even if null
     return res.json(application ?? {});
-  } catch (error) {
+  } catch (error: any) {
     console.log("err", error);
     return res.status(400).json({ error: error.message || error });
   }
@@ -109,7 +109,7 @@ router.get("/summary", async (req, res) => {
   try {
     const sumamry = await applicationsSummary();
     return res.status(200).json(sumamry);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(400).json({ error: error.message || error });
   }
 });

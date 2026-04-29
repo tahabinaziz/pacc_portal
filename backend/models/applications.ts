@@ -1,6 +1,6 @@
-import sql from "./db.js";
+import sql from "./db.ts";
 
-export async function checkReferenceNumber(referenceNumber) {
+export async function checkReferenceNumber(referenceNumber: string) {
   return await sql`
     SELECT *
     FROM applications
@@ -15,24 +15,24 @@ export async function getApplications() {
     `;
 }
 export async function registerApplication(
-  user_id,
-  reference_number,
-  relationship_type,
-  consulate,
-  abh_offices,
-  case_type,
-  status,
-  frv_email_sent_date,
-  appointment_confirmation_date,
-  visa_appointment_date,
-  visa_issued_date,
-  visa_start_date,
-  duration_months,
-  insurance_submitted_date,
-  passport_collected_date,
-  visa_type,
-  language,
-  abh_document_submitted_date
+  user_id: number,
+  reference_number: number,
+  relationship_type: string,
+  consulate: string,
+  abh_offices: string,
+  case_type: string,
+  status: string,
+  frv_email_sent_date: string,
+  appointment_confirmation_date: string,
+  visa_appointment_date: string,
+  visa_issued_date: string,
+  visa_start_date: string,
+  duration_months: string,
+  insurance_submitted_date: string,
+  passport_collected_date: string,
+  visa_type: string,
+  language: string,
+  abh_document_submitted_date: string,
 ) {
   const newApplication = await sql`
     INSERT INTO applications 
@@ -45,7 +45,7 @@ export async function registerApplication(
   return newApplication[0];
 }
 
-export async function updateApplication(id, data) {
+export async function updateApplication(id: number, data: any) {
   const updatedApplication = await sql`
     UPDATE applications SET
       reference_number = ${data.reference_number},
@@ -72,7 +72,7 @@ export async function updateApplication(id, data) {
   return updatedApplication[0];
 }
 
-export async function getApplicationByUser(user_id) {
+export async function getApplicationByUser(user_id: number) {
   const application = await sql`
         SELECT *
         FROM applications
@@ -80,28 +80,6 @@ export async function getApplicationByUser(user_id) {
     `;
 
   return application[0] ?? {};
-}
-
-export async function addCurrentReferenceNumber(current_reference_number) {
-  return await sql`INSERT INTO current_reference (current_reference_number) 
-    VALUES (${current_reference_number})`;
-}
-
-export async function editReference(id, current_reference_number) {
-  return await sql`UPDATE current_reference 
-    SET current_reference_number = ${current_reference_number} 
-    WHERE id = ${id}`;
-}
-
-export async function getCurrentReferenceNumber() {
-  const reference = await sql`
-    SELECT current_reference_number 
-    FROM current_reference 
-    ORDER BY id DESC 
-    LIMIT 1
-  `;
-
-  return reference[0]?.current_reference_number ?? null;
 }
 
 export async function applicationsSummary() {
@@ -117,7 +95,7 @@ export async function applicationsSummary() {
     `;
 
   // Convert result to object: { Karachi: 22, Islamabad: 15 }
-  const consulateCounts = {};
+  const consulateCounts: any = {};
   consulateResult.forEach((row) => {
     consulateCounts[row.consulate] = Number(row.count);
   });

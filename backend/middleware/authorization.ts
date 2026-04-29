@@ -1,6 +1,10 @@
 import jwt from "jsonwebtoken";
-
-const authorizationMiddleware = (req, res, next) => {
+import { NextFunction, Response } from "express";
+const authorizationMiddleware = (
+  req: any,
+  res: Response,
+  next: NextFunction,
+) => {
   const token = req.cookies?.access_token;
   const secretKey =
     process.env.JWT_SECRET_KEY || "sadnasdnasjdnasjkdnkjdnjkdnas";
@@ -17,7 +21,7 @@ const authorizationMiddleware = (req, res, next) => {
     req.user = data;
 
     return next();
-  } catch (error) {
+  } catch (error: any) {
     console.error("JWT error:", error);
     return res.status(401).json({
       message: "Invalid or expired token",

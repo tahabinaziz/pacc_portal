@@ -1,8 +1,13 @@
+import { Request, Response, NextFunction } from "express";
 import { getUser } from "../models/users.js";
 import jwt from "jsonwebtoken";
-import { verifyPassword } from "../utility/crypt.js";
+import { verifyPassword } from "../utility/crypt.ts";
 
-const authenticationMiddleware = async (req, res, next) => {
+const authenticationMiddleware = async (
+  req: any,
+  res: Response,
+  next: NextFunction,
+) => {
   const email = req.body.email;
   const password = req.body.password;
   try {
@@ -33,7 +38,7 @@ const authenticationMiddleware = async (req, res, next) => {
         email: req.user?.email,
       },
       secretKey,
-      { expiresIn: 60 * 60 * 8 }
+      { expiresIn: 60 * 60 * 8 },
     );
     req.access_token = token;
     return next();
