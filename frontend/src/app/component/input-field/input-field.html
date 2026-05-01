@@ -1,0 +1,9 @@
+<div
+  class="flex items-center w-full border border-gray-300 h-12 rounded-full pl-6 pr-4 gap-2 focus-within:ring-2 focus-within:ring-indigo-400 transition">
+
+  <!-- icon -->
+  <ng-content select="[icon]"></ng-content>
+
+  <input [type]="type" [placeholder]="placeholder" [(ngModel)]="value" (ngModelChange)="valueChange.emit($event)"
+    class="flex-1 bg-transparent text-gray-700 placeholder-gray-400 outline-none text-sm" required />
+</div>

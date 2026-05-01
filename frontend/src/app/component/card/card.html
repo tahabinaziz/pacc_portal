@@ -1,0 +1,24 @@
+<div class="flex h-screen w-full items-center justify-center bg-gradient-to-br from-sky-100 via-white to-sky-200 px-6">
+
+  <div class="bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl p-8 md:p-10 w-full max-w-md">
+
+    <div class="flex flex-col items-center">
+      <img class="h-20 md:h-30 w-auto mb-6" [src]="flag" alt="Card Logo" />
+
+      <h2
+        class="text-3xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-black via-red-600 to-yellow-500">
+        {{ title }}
+      </h2>
+
+      <p *ngIf="description" class="text-sm text-gray-500 mt-4">
+        {{ description }}
+      </p>
+    </div>
+
+    <!-- 👇 THIS replaces props.children -->
+    <div class="mt-4 flex flex-col gap-5">
+      <ng-content></ng-content>
+    </div>
+
+  </div>
+</div>

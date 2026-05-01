@@ -1,1 +1,42 @@
-<p>login works!</p>
+<app-card title="German FRV Tracking" description="Sign in to continue">
+
+  <form (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
+
+    <!-- Error -->
+    <span *ngIf="errorMessage" class="text-red-500 text-sm">
+      {{ errorMessage }}
+    </span>
+
+    <!-- Email -->
+    <app-input-field type="email" placeholder="Email address" [(value)]="email">
+      <span icon>
+        <!-- SVG here -->
+      </span>
+    </app-input-field>
+
+    <!-- Password -->
+    <app-input-field type="password" placeholder="Password" [(value)]="password">
+      <span icon>
+        <!-- SVG here -->
+      </span>
+    </app-input-field>
+
+    <!-- Links -->
+    <div class="flex items-center justify-between text-gray-600 text-sm">
+      <a routerLink="/registration" class="text-[#1196e6] hover:underline">
+        Create New Account
+      </a>
+
+      <a routerLink="/forget_password" class="text-[#1196e6] hover:underline">
+        Forget Password?
+      </a>
+    </div>
+
+    <!-- Button -->
+    <button type="submit" class="w-full h-12 rounded-full text-white bg-[#1196e6] hover:bg-black transition">
+      Login
+    </button>
+
+  </form>
+
+</app-card>
