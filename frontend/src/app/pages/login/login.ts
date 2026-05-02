@@ -16,26 +16,27 @@ export class LoginComponent {
   email = '';
   password = '';
   errorMessage = '';
+  loading = false;
 
   constructor(
-    private authService: AuthService,
+    private auth: AuthService,
     private router: Router,
   ) {}
 
   onSubmit() {
+    this.loading = true;
     this.errorMessage = '';
 
-    this.authService.login(this.email.toLowerCase(), this.password).subscribe({
-      next: (res: any) => {
-        if (res?.user) {
-          localStorage.setItem('user', JSON.stringify(res.user));
-          this.router.navigate(['/dashboard']);
-        } else {
-          this.errorMessage = res?.error || 'Login failed';
-        }
+    this.auth.login(this.email, this.password).subscribe({
+      next: (res) => {
+        // ✅ Save access_token and user from your API response
+        this.auth.saveSession(res.access_token, res.user);
+        // ✅ Redirect to dashboard
+        this.router.navigate(['/dashboard']);
       },
-      error: () => {
-        this.errorMessage = 'Something went wrong — please try again.';
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Invalid email or password';
+        this.loading = false;
       },
     });
   }
