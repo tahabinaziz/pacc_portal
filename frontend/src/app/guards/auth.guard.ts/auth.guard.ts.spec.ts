@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AppSensorVisualPanel } from './app-sensor-visual-panel';
+import { AuthGuardTs } from './auth.guard.ts';
 
-describe('AppSensorVisualPanel', () => {
-  let component: AppSensorVisualPanel;
-  let fixture: ComponentFixture<AppSensorVisualPanel>;
+describe('AuthGuardTs', () => {
+  let component: AuthGuardTs;
+  let fixture: ComponentFixture<AuthGuardTs>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppSensorVisualPanel],
+      imports: [AuthGuardTs],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AppSensorVisualPanel);
+    fixture = TestBed.createComponent(AuthGuardTs);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

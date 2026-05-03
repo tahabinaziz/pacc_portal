@@ -1,0 +1,134 @@
+<div class="max-w-3xl mx-auto">
+
+  <!-- Header -->
+  <div class="mb-6">
+    <h1 class="font-serif text-2xl text-gray-900 tracking-tight">
+      Student Registration
+    </h1>
+    <p class="text-sm text-gray-400 mt-1">
+      Fill in all the details below to continue
+    </p>
+  </div>
+
+  <!-- Card -->
+  <div class="bg-white rounded-xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition">
+
+    <form #f="ngForm" (ngSubmit)="onSubmit()">
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <!-- Name -->
+        <div>
+          <label class="text-xs text-gray-500 mb-1 block">Name</label>
+          <input [(ngModel)]="form.name" name="name" required
+            class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 transition">
+        </div>
+
+        <!-- student_id -->
+        <div>
+          <label class="text-xs text-gray-500 mb-1 block">Student ID</label>
+          <input [(ngModel)]="form.student_id" name="student_id"
+            class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-gray-50 text-indigo-600 font-mono">
+        </div>
+
+        <!-- Father Name -->
+        <div>
+          <label class="text-xs text-gray-500 mb-1 block">Father / Husband</label>
+          <input [(ngModel)]="form.fh_name" name="fh_name"
+            class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label class="text-xs text-gray-500 mb-1 block">Email</label>
+          <input [(ngModel)]="form.email" name="email" type="email" required
+            class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+        </div>
+
+        <!-- Phone -->
+        <div>
+          <label class="text-xs text-gray-500 mb-1 block">Phone</label>
+          <input [(ngModel)]="form.phone" name="phone"
+            class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+        </div>
+
+        <!-- Amount -->
+        <div>
+          <label class="text-xs text-gray-500 mb-1 block">Amount</label>
+          <input [(ngModel)]="form.amount" name="amount" type="number"
+            class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+        </div>
+
+        <!-- Department -->
+        <div>
+          <label class="text-xs text-gray-500 mb-1 block">Department</label>
+          <app-dropdown name="department" [options]="departments" [(value)]="form.department"></app-dropdown>
+        </div>
+
+        <!-- Gender -->
+        <div>
+          <label class="text-xs text-gray-500 mb-1 block">Gender</label>
+          <app-dropdown name="gender" [options]="genders" [(value)]="form.gender"></app-dropdown>
+        </div>
+
+        <!-- Course -->
+        <div>
+          <label class="text-xs text-gray-500 mb-1 block">Course</label>
+          <app-dropdown name="course" [options]="courses" [(value)]="form.course"></app-dropdown>
+        </div>
+
+        <!-- Bank -->
+        <div>
+          <label class="text-xs text-gray-500 mb-1 block">Bank</label>
+          <app-dropdown name="bank" [options]="banks" [(value)]="form.bank"></app-dropdown>
+        </div>
+
+        <!-- Status -->
+        <div>
+          <label class="text-xs text-gray-500 mb-1 block">Status</label>
+          <app-dropdown name="status" [options]="status" [(value)]="form.status"></app-dropdown>
+        </div>
+
+      </div>
+
+      <!-- Actions -->
+      <div class="mt-6 pt-5 border-t flex justify-end gap-3">
+        <button type="button" (click)="onReset()"
+          class="px-5 py-2 text-sm border rounded-lg text-gray-500 hover:bg-gray-50">
+          Reset
+        </button>
+
+        <button type="submit" [disabled]="f.invalid || isLoading" class="px-6 py-2 text-sm bg-slate-900 text-white rounded-lg
+                 hover:opacity-90 disabled:opacity-50 flex items-center gap-2">
+
+          <span *ngIf="!isLoading">Submit Registration</span>
+
+          <span *ngIf="isLoading" class="flex items-center gap-2">
+            <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24"></svg>
+            Submitting...
+          </span>
+
+        </button>
+      </div>
+
+    </form>
+    <!-- SUCCESS (OUTSIDE FORM) -->
+    <div *ngIf="successMessage"
+      class="mt-4 bg-green-50 border border-green-200 rounded-xl px-5 py-4 flex items-center gap-3 shadow-sm">
+
+      <span class="w-7 h-7 bg-green-500 text-white flex items-center justify-center rounded-full">✓</span>
+
+      <div>
+        <p class="text-sm font-semibold text-green-800">
+          {{ successMessage }}
+        </p>
+        <p class="text-xs text-green-600">Your data has been saved.</p>
+      </div>
+    </div>
+
+    <!-- ERROR (OUTSIDE FORM) -->
+    <div *ngIf="errorMessage" class="mt-4 text-red-500 text-sm">
+      {{ errorMessage }}
+    </div>
+  </div>
+</div>

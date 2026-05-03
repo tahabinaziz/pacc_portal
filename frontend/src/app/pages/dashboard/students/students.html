@@ -1,0 +1,279 @@
+<div>
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="font-serif text-2xl text-gray-900">Students</h1>
+      <p class="text-sm text-gray-400 mt-0.5">Manage all student records</p>
+    </div>
+    <button [routerLink]="['/dashboard/registration']"
+      class="bg-slate-900 text-amber-100 text-sm px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
+      + Add student
+    </button>
+  </div>
+
+  <div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+
+    <!-- Toolbar -->
+    <div class="flex items-center gap-3 px-4 py-3 border-b border-gray-100">
+      <input [ngModel]="globalFilter()" (ngModelChange)="table.setGlobalFilter($event)"
+        placeholder="Search name, email, course…"
+        class="border border-gray-200 rounded-lg px-3 py-2 text-sm w-64 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+      <span class="ml-auto text-xs text-gray-400">
+        {{ table.getFilteredRowModel().rows.length }} students
+      </span>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto">
+      <table class="w-full">
+
+        <!-- Headers — using TanStack header groups -->
+        <thead class="bg-gray-50">
+          @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+          <tr>
+            @for (header of headerGroup.headers; track header.id) {
+            <th (click)="header.column.getToggleSortingHandler()?.($event)"
+              class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wide select-none whitespace-nowrap"
+              [class.cursor-pointer]="header.column.getCanSort()"
+              [class.hover:text-gray-600]="header.column.getCanSort()">
+              {{ getHeaderLabel(header) }}
+              <span class="ml-1 opacity-50">{{ getSortIcon(header) }}</span>
+            </th>
+            }
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wide">
+              Actions
+            </th>
+          </tr>
+          }
+        </thead>
+
+        <!-- Rows — using TanStack pagination row model -->
+        <tbody class="divide-y divide-gray-50">
+          @for (row of table.getPaginationRowModel().rows; track row.id) {
+          <tr class="hover:bg-gray-50 transition-colors">
+            @for (cell of row.getVisibleCells(); track cell.id) {
+            <td class="px-4 py-3 text-sm">
+
+              @if (cell.column.id === 'name') {
+              <div class="flex items-center gap-2">
+                <span
+                  class="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 text-xs font-medium flex items-center justify-center flex-shrink-0">
+                  {{ getInitials(getCellValue(cell)) }}
+                </span>
+                <span class="text-gray-900 font-medium">{{ getCellValue(cell) }}</span>
+              </div>
+              }
+
+              @else if (cell.column.id === 'id') {
+              <span class="text-xs text-gray-400 font-mono">{{ getCellValue(cell) }}</span>
+              }
+
+              @else if (cell.column.id === 'email') {
+              <span class="text-gray-500">{{ getCellValue(cell) }}</span>
+              }
+
+              @else if (cell.column.id === 'grade') {
+              <span class="font-medium" [class]="getGradeClass(getCellValue(cell))">
+                {{ getCellValue(cell) }}
+              </span>
+              }
+
+              @else if (cell.column.id === 'status') {
+              <span class="text-xs px-2.5 py-1 rounded-full font-medium" [class]="getStatusClass(getCellValue(cell))">
+                {{ getCellValue(cell) }}
+              </span>
+              }
+
+              @else {
+              <span class="text-gray-700">{{ getCellValue(cell) }}</span>
+              }
+
+            </td>
+            }
+
+            <!-- Actions column -->
+            <td class="px-4 py-3">
+              <div class="flex items-center gap-3">
+                <button class="text-xs text-indigo-600 hover:underline" (click)="openEdit(row.original)">
+                  Edit
+                </button>
+                <button (click)="openDeleteModal(row.original.id)" class="text-xs text-red-600 hover:underline">
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+          }
+
+          @if (table.getPaginationRowModel().rows.length === 0) {
+          <tr>
+            <td colspan="7" class="px-4 py-10 text-center text-sm text-gray-400">
+              No students found.
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex items-center justify-between px-4 py-3 border-t border-gray-100">
+      <span class="text-xs text-gray-400">
+        Page {{ table.getState().pagination.pageIndex + 1 }} of {{ table.getPageCount() }}
+        · {{ table.getFilteredRowModel().rows.length }} total
+      </span>
+      <div class="flex gap-2">
+        <button (click)="table.previousPage()" [disabled]="!table.getCanPreviousPage()"
+          class="text-xs border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+          ← Prev
+        </button>
+        <button (click)="table.nextPage()" [disabled]="!table.getCanNextPage()"
+          class="text-xs border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
+          Next →
+        </button>
+      </div>
+    </div>
+
+
+  </div>
+
+</div>
+
+<div *ngIf="showDeleteModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+
+  <div class="bg-white rounded-xl p-6 w-[350px] shadow-lg">
+
+    <h2 class="text-lg font-semibold text-gray-800">
+      Delete Student
+    </h2>
+
+    <p class="text-sm text-gray-500 mt-2">
+      Are you sure you want to delete this student?
+    </p>
+
+    <div class="flex justify-end gap-3 mt-5">
+
+      <button (click)="closeModal()" class="px-4 py-2 text-sm border rounded-lg text-gray-600 hover:bg-gray-100">
+        Cancel
+      </button>
+
+      <button (click)="confirmDelete()" class="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700">
+        Delete
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+
+<div *ngIf="isEditModal && selectedStudent" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+
+  <div class="bg-white w-[600px] max-h-[90vh] overflow-y-auto rounded-xl shadow-lg p-6">
+
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-5">
+      <h2 class="text-lg font-semibold">Edit Student</h2>
+      <button (click)="closeEditModal()" class="text-gray-500 hover:text-black text-lg">✕</button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <!-- Name -->
+      <div>
+        <label class="text-xs text-gray-500">Name</label>
+        <input [(ngModel)]="selectedStudent.name" name="name"
+          class="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-indigo-500">
+      </div>
+
+      <!-- Student ID -->
+      <div>
+        <label class="text-xs text-gray-500">Student ID</label>
+        <input [(ngModel)]="selectedStudent.student_id" name="student_id"
+          class="w-full border px-3 py-2 rounded-lg bg-gray-50 text-indigo-600 font-mono">
+      </div>
+
+      <!-- Father/Husband -->
+      <div>
+        <label class="text-xs text-gray-500">Father / Husband</label>
+        <input [(ngModel)]="selectedStudent.fh_name" name="fh_name" class="w-full border px-3 py-2 rounded-lg">
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label class="text-xs text-gray-500">Email</label>
+        <input [(ngModel)]="selectedStudent.email" name="email" type="email" class="w-full border px-3 py-2 rounded-lg">
+      </div>
+
+      <!-- Phone -->
+      <div>
+        <label class="text-xs text-gray-500">Phone</label>
+        <input [(ngModel)]="selectedStudent.phone" name="phone" class="w-full border px-3 py-2 rounded-lg">
+      </div>
+
+      <!-- Amount -->
+      <div>
+        <label class="text-xs text-gray-500">Amount</label>
+        <input [(ngModel)]="selectedStudent.amount" name="amount" type="number"
+          class="w-full border px-3 py-2 rounded-lg">
+      </div>
+
+      <!-- Department -->
+      <div>
+        <label class="text-xs text-gray-500">Department</label>
+        <select [(ngModel)]="selectedStudent.department" name="department" class="w-full border px-3 py-2 rounded-lg">
+          <option *ngFor="let d of departments" [value]="d">{{ d }}</option>
+        </select>
+      </div>
+
+      <!-- Gender -->
+      <div>
+        <label class="text-xs text-gray-500">Gender</label>
+        <select [(ngModel)]="selectedStudent.gender" name="gender" class="w-full border px-3 py-2 rounded-lg">
+          <option *ngFor="let g of genders" [ngValue]="g">
+            {{ g }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Course -->
+      <div>
+        <label class="text-xs text-gray-500">Course</label>
+        <select [(ngModel)]="selectedStudent.course" name="course" class="w-full border px-3 py-2 rounded-lg">
+          <option *ngFor="let c of courses" [value]="c">{{ c }}</option>
+        </select>
+      </div>
+
+      <!-- Bank -->
+      <div>
+        <label class="text-xs text-gray-500">Bank</label>
+        <select [(ngModel)]="selectedStudent.bank" name="bank" class="w-full border px-3 py-2 rounded-lg">
+          <option *ngFor="let b of banks" [value]="b">{{ b }}</option>
+        </select>
+      </div>
+
+      <!-- Status -->
+      <div>
+        <label class="text-xs text-gray-500">Status</label>
+        <select [(ngModel)]="selectedStudent.status" name="status" class="w-full border px-3 py-2 rounded-lg">
+          <option *ngFor="let s of status" [value]="s">{{ s }}</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- Actions -->
+    <div class="flex justify-end gap-3 mt-6 border-t pt-4">
+
+      <button (click)="closeEditModal()" class="px-4 py-2 border rounded-lg text-gray-600 hover:bg-gray-100">
+        Cancel
+      </button>
+
+      <button (click)="updateStudent()" class="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+        Update Student
+      </button>
+
+    </div>
+
+  </div>
+</div>

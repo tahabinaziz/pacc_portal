@@ -31,6 +31,8 @@ export class LoginComponent {
       next: (res) => {
         // ✅ Save access_token and user from your API response
         this.auth.saveSession(res.access_token, res.user);
+        // ✅ IMPORTANT FIX
+        this.auth.saveSession(res.access_token, res.user);
         // ✅ Redirect to dashboard
         this.router.navigate(['/dashboard']);
       },

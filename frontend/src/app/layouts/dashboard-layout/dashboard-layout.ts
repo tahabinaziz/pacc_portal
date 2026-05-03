@@ -1,30 +1,29 @@
-import { Component } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Component, signal } from '@angular/core';
+import { Router, RouterLink, RouterOutlet, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-dashboard-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './dashboard-layout.html',
 })
 export class DashboardLayoutComponent {
   user = JSON.parse(localStorage.getItem('user') || '{}');
-
+  userMenuOpen = signal(false);
   menuItems = [
     { label: 'Overview', icon: 'grid', route: '/dashboard' },
-    { label: 'Students', icon: 'students', route: '/dashboard/student' },
-    { label: 'Analytics', icon: 'chart', route: '/dashboard/analytics' },
-    { label: 'Users', icon: 'users', route: '/dashboard/users' },
-    { label: 'Orders', icon: 'orders', route: '/dashboard/orders' },
-    { label: 'Profile', icon: 'profile', route: '/dashboard/profile' },
-    { label: 'Settings', icon: 'settings', route: '/dashboard/settings' },
+    { label: 'Students', icon: 'students', route: '/dashboard/students' },
+    { label: 'Registration', icon: 'registration', route: '/dashboard/registration' },
   ];
 
   constructor(
     private auth: AuthService,
     private router: Router,
   ) {}
+  toggleUserMenu() {
+    this.userMenuOpen.update((v) => !v);
+  }
 
   logout() {
     this.auth.logout();
