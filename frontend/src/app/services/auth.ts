@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { signal } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -9,6 +10,12 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
+  // in AuthService
+  statsVersion = signal(0); // bump this to trigger refresh
+
+  triggerStatsRefresh() {
+    this.statsVersion.update((v) => v + 1);
+  }
   login(email: string, password: string): Observable<any> {
     return this.http.post(
       `${this.apiUrl}/login`,
@@ -29,6 +36,13 @@ export class AuthService {
     return this.http.post(
       `${this.apiUrl}/api/students`,
       data,
+      { withCredentials: true }, // ✅ IMPORTANT
+    );
+  }
+
+  getStats(): Observable<any> {
+    return this.http.get(
+      `${this.apiUrl}/api/students/stats`,
       { withCredentials: true }, // ✅ IMPORTANT
     );
   }

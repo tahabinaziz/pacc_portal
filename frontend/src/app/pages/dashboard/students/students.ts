@@ -80,7 +80,7 @@ export class StudentsComponent implements OnInit {
         console.log('STUDENTS API:', res);
 
         // adjust depending on backend structure
-        this.data.set(res?.students || res || []);
+        this.data.set(res || []);
       },
 
       error: (err) => {
@@ -107,7 +107,7 @@ export class StudentsComponent implements OnInit {
     this.authService.deleteStudent(this.selectedStudentId).subscribe({
       next: () => {
         this.data.set(this.data().filter((s) => s.id !== this.selectedStudentId));
-
+        this.authService.triggerStatsRefresh(); // 👈 notify overview
         this.closeModal();
       },
 

@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { DropdownComponent } from '../../../component/dropdown/dropdown';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registration',
@@ -11,7 +12,10 @@ import { AuthService } from '../../../services/auth';
   templateUrl: './registration.html',
 })
 export class RegistrationComponent {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
   submitted = false;
 
   form: any = {
@@ -52,33 +56,33 @@ export class RegistrationComponent {
 
   banks = ['HBL', 'UBL', 'Meezan Bank', 'Allied Bank', 'Bank Alfalah', 'MCB Bank', 'National Bank'];
 
-  generatestudent_id() {
-    const year = new Date().getFullYear();
-    const random = Math.floor(1000 + Math.random() * 9000);
-    this.form.student_id = `REG/${random}/${year}`;
-  }
-
   isLoading = false;
   successMessage = '';
   errorMessage = '';
 
   onSubmit() {
+    // manually check required dropdown fields
+    const requiredFields = ['gender', 'department', 'course', 'bank', 'status'];
+    const missing = requiredFields.some((field) => !this.form[field]);
+
+    if (missing) {
+      this.errorMessage = 'Please fill in all required fields.';
+      return; // 👈 stop submission
+    }
+
     this.isLoading = true;
-    this.submitted = false;
     this.errorMessage = '';
     this.successMessage = '';
 
     this.authService.register(this.form).subscribe({
       next: (res: any) => {
         this.isLoading = false;
-
         this.successMessage = 'Registration successful 🎉';
         this.resetFormFields();
+        setTimeout(() => this.router.navigate(['/dashboard']), 1500);
       },
-
       error: (err) => {
         this.isLoading = false;
-        this.submitted = false;
         this.errorMessage = err?.error?.message || 'Server error — try again';
       },
     });

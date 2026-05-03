@@ -93,12 +93,12 @@
 
       <!-- Actions -->
       <div class="mt-6 pt-5 border-t flex justify-end gap-3">
-        <button type="button" (click)="onReset()"
+        <button type="button" (click)="resetFormFields()"
           class="px-5 py-2 text-sm border rounded-lg text-gray-500 hover:bg-gray-50">
           Reset
         </button>
 
-        <button type="submit" [disabled]="f.invalid || isLoading" class="px-6 py-2 text-sm bg-slate-900 text-white rounded-lg
+        <button type="submit" [disabled]="isLoading" class="px-6 py-2 text-sm bg-slate-900 text-white rounded-lg
                  hover:opacity-90 disabled:opacity-50 flex items-center gap-2">
 
           <span *ngIf="!isLoading">Submit Registration</span>
