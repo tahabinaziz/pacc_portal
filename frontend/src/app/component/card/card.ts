@@ -10,5 +10,5 @@ import { Component, Input } from '@angular/core';
 export class CardComponent {
   @Input() title = '';
   @Input() description = '';
-  flag = 'assets/flag.png';
+  angular = 'assets/angular.png';
 }
