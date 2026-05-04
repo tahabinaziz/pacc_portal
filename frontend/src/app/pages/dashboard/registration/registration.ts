@@ -4,7 +4,13 @@ import { DropdownComponent } from '../../../component/dropdown/dropdown';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/auth';
 import { Router } from '@angular/router';
-
+import {
+  STATUS_OPTIONS,
+  GENDER_OPTIONS,
+  DEPARTMENT_OPTIONS,
+  COURSE_OPTIONS,
+  BANK_OPTIONS,
+} from '../../../shared/constants';
 @Component({
   selector: 'app-registration',
   standalone: true,
@@ -31,31 +37,11 @@ export class RegistrationComponent {
     bank: '',
     status: '',
   };
-  status = ['active', 'pending', 'inactive'];
-  genders = ['Male', 'Female', 'Other'];
-
-  center = ['KMB', 'LHR', 'HYD'];
-
-  departments = [
-    'Computer Science',
-    'Mathematics',
-    'Physics',
-    'Chemistry',
-    'Biology',
-    'Business Administration',
-  ];
-
-  courses = [
-    'Bachelor of Science',
-    'Master of Science',
-    'Bachelor of Arts',
-    'Master of Arts',
-    'PhD',
-    'Diploma',
-  ];
-
-  banks = ['HBL', 'UBL', 'Meezan Bank', 'Allied Bank', 'Bank Alfalah', 'MCB Bank', 'National Bank'];
-
+  status = STATUS_OPTIONS;
+  genders = GENDER_OPTIONS;
+  departments = DEPARTMENT_OPTIONS;
+  courses = COURSE_OPTIONS;
+  banks = BANK_OPTIONS;
   isLoading = false;
   successMessage = '';
   errorMessage = '';
@@ -79,7 +65,7 @@ export class RegistrationComponent {
         this.isLoading = false;
         this.successMessage = 'Registration successful 🎉';
         this.resetFormFields();
-        setTimeout(() => this.router.navigate(['/dashboard']), 1500);
+        setTimeout(() => this.router.navigate(['/dashboard/students']), 1500);
       },
       error: (err) => {
         this.isLoading = false;

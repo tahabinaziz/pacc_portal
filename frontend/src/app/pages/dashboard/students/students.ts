@@ -13,6 +13,13 @@ import { Student } from '../../../models/students';
 import { AuthService } from '../../../services/auth';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import {
+  STATUS_OPTIONS,
+  GENDER_OPTIONS,
+  DEPARTMENT_OPTIONS,
+  COURSE_OPTIONS,
+  BANK_OPTIONS,
+} from '../../../shared/constants';
 @Component({
   selector: 'app-students',
   standalone: true,
@@ -25,29 +32,11 @@ export class StudentsComponent implements OnInit {
   selectedStudentId: string | null = null;
   selectedStudent: any = {};
   isEditModal = false;
-  status = ['active', 'pending', 'inactive'];
-  genders = ['Male', 'Female', 'Other'];
-
-  departments = [
-    'Computer Science',
-    'Mathematics',
-    'Physics',
-    'Chemistry',
-    'Biology',
-    'Business Administration',
-  ];
-
-  courses = [
-    'Bachelor of Science',
-    'Master of Science',
-    'Bachelor of Arts',
-    'Master of Arts',
-    'PhD',
-    'Diploma',
-  ];
-
-  banks = ['HBL', 'UBL', 'Meezan Bank', 'Allied Bank', 'Bank Alfalah', 'MCB Bank', 'National Bank'];
-
+  status = STATUS_OPTIONS;
+  genders = GENDER_OPTIONS;
+  departments = DEPARTMENT_OPTIONS;
+  courses = COURSE_OPTIONS;
+  banks = BANK_OPTIONS;
   ngOnInit() {
     this.loadStudents();
   }
